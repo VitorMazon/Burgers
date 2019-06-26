@@ -2,13 +2,16 @@
 #include <math.h>
 #include <stdlib.h>
 
+
+
 void main() {
 	int i, j;
-	int nx, ny, nt, c, s;
-	double *x, *y, dx, dy, sigma, nu, dt;
+	int nx, ny, nt, c;
+	double *x, *y, dx, dy, s, sigma, nu, dt, k, m;
+	double **u, **v, **un, **vn, **comb;
 	
 	//Declaração de variáveis
-	s = 2;
+	s = 2.;
 	nx = 41;
 	ny = 41;
 	nt = 120;
@@ -19,23 +22,50 @@ void main() {
 	nu = 0.01;
 	dt = sigma*dx*dy/nu;
 	
-	//Inicializando variaveis
+	//Inicializando mesh
 	x = (double *)malloc(nx*sizeof(double));
 	y = (double *)malloc(ny*sizeof(double));
 	
-	for(i=0; i<nx; i++){ x[i] = i; }
-	for(i=0; i<ny; i++){ y[i] = i; }
+	x[0]=0;
+	y[0]=0;
+	for(i=1; i<nx; i++){ x[i]=x[i-1]+dx; }
+	for(i=1; i<ny; i++){ y[i]=y[i-1]+dy; }
 	
-	/*for(i=0.; i<s; i=i+dx) {
-		u[0][i] = 1;
-		v[0][i] = 1;
-		un[0][i] = 1;
-		vn[0][i] = 1;
-		comb[0][i] = 1;
+	//Variaveis da eq. de Burgers
+	u=malloc(nx*sizeof(double *));
+	v=malloc(nx*sizeof(double *));
+	un=malloc(nx*sizeof(double *));
+	vn=malloc(nx*sizeof(double *));
+	comb=malloc(nx*sizeof(double *));
+	for(i=0; i<nx; i++) {
+		u[i] = (double *) malloc(ny*sizeof(double));
+		v[i] = (double *) malloc(ny*sizeof(double));
+		un[i] = (double *) malloc(ny*sizeof(double));
+		vn[i] = (double *) malloc(ny*sizeof(double));
+		comb[i] = (double *) malloc(ny*sizeof(double));
 	}
-	*/
+	
+	//Inicializando variaveis
+	for(i=0; i<nx; i++){
+		for(j=0; j<ny; j++) {
+			u[i][j] = 1;
+			v[i][j] = 1;
+			un[i][j] = 1;
+			vn[i][j] = 1;
+			comb[i][j] = 1;
+		}
+	}
+
+	
+	
 	
 	free(x);
 	free(y);
+	free(u);
+	free(v);
+	free(un);
+	free(vn);
+	free(comb);
+	return;
 }
 
